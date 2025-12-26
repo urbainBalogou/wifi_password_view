@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:wifiCrack.ViewModels"
+             xmlns:models="clr-namespace:wifiCrack.Models"
+             x:Class="wifiCrack.Views.NetworkDetailPage"
+             x:DataType="viewmodels:NetworkDetailViewModel"
+             Title="Détails du Réseau">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="15" Spacing="20">
+
+            <!-- En-tête du réseau -->
+            <Frame Padding="20"
+                   CornerRadius="15"
+                   HasShadow="True"
+                   BackgroundColor="{StaticResource Primary}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{Binding Network.SecurityIcon}"
+                           FontSize="48"
+                           HorizontalOptions="Center"/>
+
+                    <Label Text="{Binding Network.Ssid}"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+
+                    <Label Text="{Binding Network.Bssid}"
+                           FontSize="14"
+                           TextColor="White"
+                           Opacity="0.8"
+                           HorizontalOptions="Center"/>
+
+                    <!-- Score de sécurité -->
+                    <Frame BackgroundColor="White"
+                           CornerRadius="10"
+                           Padding="15"
+                           Margin="0,10,0,0">
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Label Text="Score de sécurité:"
+                                   FontSize="16"
+                                   VerticalOptions="Center"/>
+                            <Label Text="{Binding Network.SecurityScore}"
+                                   FontSize="32"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}"
+                                   VerticalOptions="Center"/>
+                            <Label Text="/10"
+                                   FontSize="16"
+                                   VerticalOptions="Center"
+                                   Opacity="0.6"/>
+                        </HorizontalStackLayout>
+                    </Frame>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Informations techniques -->
+            <Label Text="📊 Informations Techniques"
+                   FontSize="20"
+                   FontAttributes="Bold"/>
+
+            <Frame Padding="15"
+                   CornerRadius="15"
+                   HasShadow="True"
+                   BackgroundColor="{StaticResource CardBackground}">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <Label Grid.Column="0" Text="Type de sécurité:" FontAttributes="Bold"/>
+                        <Label Grid.Column="1" Text="{Binding Network.SecurityType}"/>
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray300}"/>
+
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <Label Grid.Column="0" Text="Force du signal:" FontAttributes="Bold"/>
+                        <Label Grid.Column="1" Text="{Binding Network.SignalQuality}"/>
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray300}"/>
+
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <Label Grid.Column="0" Text="Fréquence:" FontAttributes="Bold"/>
+                        <Label Grid.Column="1">
+                            <Label.Text>
+                                <MultiBinding StringFormat="{}{0} MHz">
+                                    <Binding Path="Network.Frequency"/>
+                                </MultiBinding>
+                            </Label.Text>
+                        </Label>
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray300}"/>
+
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <Label Grid.Column="0" Text="Canal:" FontAttributes="Bold"/>
+                        <Label Grid.Column="1" Text="{Binding Network.Channel}"/>
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray300}"/>
+
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <Label Grid.Column="0" Text="WPS:" FontAttributes="Bold"/>
+                        <Label Grid.Column="1" Text="{Binding Network.IsWpsEnabled}"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Mot de passe sauvegardé -->
+            <Frame IsVisible="{Binding Network.IsSaved}"
+                   Padding="15"
+                   CornerRadius="15"
+                   HasShadow="True"
+                   BackgroundColor="{StaticResource Success}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="💾 Réseau Sauvegardé"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="White"/>
+
+                    <Label Text="{Binding Credential.Password}"
+                           FontSize="16"
+                           TextColor="White"
+                           IsVisible="{Binding Credential}"/>
+
+                    <Label Text="Note: Sur Android 10+, les mots de passe sauvegardés ne sont pas accessibles sans accès root pour des raisons de sécurité."
+                           FontSize="12"
+                           TextColor="White"
+                           Opacity="0.9"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Analyse de sécurité -->
+            <Label Text="🔍 Analyse de Sécurité"
+                   FontSize="20"
+                   FontAttributes="Bold"/>
+
+            <ActivityIndicator IsRunning="{Binding IsAnalyzing}"
+                               IsVisible="{Binding IsAnalyzing}"
+                               Color="{StaticResource Primary}"/>
+
+            <!-- Vulnérabilités -->
+            <Label Text="⚠️ Vulnérabilités Détectées"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   IsVisible="{Binding Vulnerabilities.Count}"/>
+
+            <CollectionView ItemsSource="{Binding Vulnerabilities}"
+                            IsVisible="{Binding Vulnerabilities.Count}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Vulnerability">
+                        <Frame Margin="0,5"
+                               Padding="15"
+                               CornerRadius="15"
+                               HasShadow="True"
+                               BackgroundColor="{StaticResource Warning}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="{Binding Title}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="White"/>
+
+                                <Label Text="{Binding Description}"
+                                       FontSize="14"
+                                       TextColor="White"/>
+
+                                <Frame BackgroundColor="White"
+                                       Padding="10"
+                                       CornerRadius="8">
+                                    <VerticalStackLayout Spacing="5">
+                                        <Label Text="Impact:"
+                                               FontSize="12"
+                                               FontAttributes="Bold"/>
+                                        <Label Text="{Binding Impact}"
+                                               FontSize="12"/>
+                                    </VerticalStackLayout>
+                                </Frame>
+
+                                <Label Text="{Binding TechnicalDetails}"
+                                       FontSize="12"
+                                       TextColor="White"
+                                       Opacity="0.9"
+                                       IsVisible="{Binding TechnicalDetails}"/>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Recommandations -->
+            <Label Text="💡 Recommandations"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   IsVisible="{Binding Recommendations.Count}"/>
+
+            <CollectionView ItemsSource="{Binding Recommendations}"
+                            IsVisible="{Binding Recommendations.Count}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Recommendation">
+                        <Frame Margin="0,5"
+                               Padding="15"
+                               CornerRadius="15"
+                               HasShadow="True"
+                               BackgroundColor="{StaticResource Success}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="{Binding Title}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="White"/>
+
+                                <Label Text="{Binding Description}"
+                                       FontSize="14"
+                                       TextColor="White"/>
+
+                                <Frame BackgroundColor="White"
+                                       Padding="10"
+                                       CornerRadius="8"
+                                       IsVisible="{Binding Steps.Count}">
+                                    <VerticalStackLayout Spacing="5">
+                                        <Label Text="Étapes:"
+                                               FontSize="12"
+                                               FontAttributes="Bold"/>
+                                        <CollectionView ItemsSource="{Binding Steps}">
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Label FontSize="12">
+                                                        <Label.FormattedText>
+                                                            <FormattedString>
+                                                                <Span Text="• "/>
+                                                                <Span Text="{Binding .}"/>
+                                                            </FormattedString>
+                                                        </Label.FormattedText>
+                                                    </Label>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                        </CollectionView>
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Actions -->
+            <Button Text="📄 Générer un Rapport"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    CornerRadius="10"
+                    Padding="15"
+                    Clicked="OnGenerateReportClicked"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

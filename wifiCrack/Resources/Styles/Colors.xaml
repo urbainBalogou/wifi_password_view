@@ -41,4 +41,13 @@
     <Color x:Key="Blue200Accent">#72ACF1</Color>
     <Color x:Key="Blue300Accent">#A7CBF6</Color>
 
+    <!-- Couleurs personnalisées pour l'application -->
+    <Color x:Key="Success">#4CAF50</Color>
+    <Color x:Key="Warning">#FF9800</Color>
+    <Color x:Key="Danger">#F44336</Color>
+    <Color x:Key="Info">#2196F3</Color>
+    <Color x:Key="BackgroundColor">#F5F5F5</Color>
+    <Color x:Key="CardBackground">#FFFFFF</Color>
+    <Color x:Key="LightBackground">#F0F0F0</Color>
+
 </ResourceDictionary>

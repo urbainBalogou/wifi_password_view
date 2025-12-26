@@ -12,15 +12,21 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 
 		<!-- Display name -->
-		<ApplicationTitle>wifiCrack</ApplicationTitle>
+		<ApplicationTitle>WiFi Security Auditor</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.wificrack</ApplicationId>
+		<ApplicationId>com.security.wifisecurityauditor</ApplicationId>
 		<ApplicationIdGuid>EF2BA40C-091D-418E-9ADE-9A04B8AC4006</ApplicationIdGuid>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>1</ApplicationVersion>
+		<ApplicationDisplayVersion>2.0</ApplicationDisplayVersion>
+		<ApplicationVersion>2</ApplicationVersion>
+
+		<!-- Permissions Android -->
+		<AndroidManifestPlaceholders>android:name="android.permission.ACCESS_WIFI_STATE"</AndroidManifestPlaceholders>
+		<AndroidManifestPlaceholders>android:name="android.permission.CHANGE_WIFI_STATE"</AndroidManifestPlaceholders>
+		<AndroidManifestPlaceholders>android:name="android.permission.ACCESS_FINE_LOCATION"</AndroidManifestPlaceholders>
+		<AndroidManifestPlaceholders>android:name="android.permission.ACCESS_COARSE_LOCATION"</AndroidManifestPlaceholders>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>

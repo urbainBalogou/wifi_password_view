@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:wifiCrack.ViewModels"
+             xmlns:models="clr-namespace:wifiCrack.Models"
+             x:Class="wifiCrack.Views.EducationalPage"
+             x:DataType="viewmodels:EducationalViewModel"
+             Title="📚 Mode Éducatif">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Tabs -->
+        <HorizontalStackLayout Grid.Row="0"
+                               Padding="10"
+                               Spacing="10"
+                               BackgroundColor="{StaticResource CardBackground}">
+            <Button Text="📖 Tutoriels"
+                    x:Name="TutorialsTab"
+                    Clicked="OnTutorialsClicked"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    CornerRadius="10"
+                    Padding="15,10"/>
+
+            <Button Text="❓ Quiz"
+                    x:Name="QuizTab"
+                    Clicked="OnQuizClicked"
+                    BackgroundColor="{StaticResource Gray300}"
+                    TextColor="{StaticResource Gray900}"
+                    CornerRadius="10"
+                    Padding="15,10"/>
+        </HorizontalStackLayout>
+
+        <!-- Contenu des tutoriels -->
+        <ScrollView Grid.Row="1"
+                    x:Name="TutorialsContent">
+            <VerticalStackLayout Padding="15" Spacing="15">
+
+                <Label Text="📚 Contenu Éducatif"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       Margin="0,10,0,10"/>
+
+                <CollectionView ItemsSource="{Binding AllContent}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:EducationalContent">
+                            <Frame Margin="0,5"
+                                   Padding="15"
+                                   CornerRadius="15"
+                                   HasShadow="True"
+                                   BackgroundColor="{StaticResource CardBackground}">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnContentTapped"/>
+                                </Frame.GestureRecognizers>
+
+                                <VerticalStackLayout Spacing="10">
+                                    <Label Text="{Binding Title}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"/>
+
+                                    <Label Text="{Binding Description}"
+                                           FontSize="14"
+                                           Opacity="0.7"/>
+
+                                    <Label Text="Points clés:"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           Margin="0,5,0,0"/>
+
+                                    <CollectionView ItemsSource="{Binding KeyPoints}">
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <Label FontSize="13"
+                                                       Margin="10,2,0,2">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="• "/>
+                                                            <Span Text="{Binding .}"/>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+
+                                    <Button Text="Lire plus ➡️"
+                                            BackgroundColor="{StaticResource Primary}"
+                                            TextColor="White"
+                                            CornerRadius="8"
+                                            Padding="10"
+                                            Margin="0,10,0,0"
+                                            Clicked="OnReadMoreClicked"/>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Contenu du quiz -->
+        <ScrollView Grid.Row="1"
+                    x:Name="QuizContent"
+                    IsVisible="False">
+            <VerticalStackLayout Padding="15" Spacing="20">
+
+                <Label Text="❓ Quiz de Sécurité WiFi"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       Margin="0,10,0,10"/>
+
+                <!-- Score -->
+                <Frame Padding="15"
+                       CornerRadius="15"
+                       HasShadow="True"
+                       BackgroundColor="{StaticResource Primary}">
+                    <HorizontalStackLayout Spacing="10"
+                                           HorizontalOptions="Center">
+                        <Label Text="Score:"
+                               FontSize="18"
+                               TextColor="White"
+                               VerticalOptions="Center"/>
+                        <Label Text="{Binding Score}"
+                               FontSize="32"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               VerticalOptions="Center"/>
+                        <Label FontSize="18"
+                               TextColor="White"
+                               VerticalOptions="Center">
+                            <Label.Text>
+                                <MultiBinding StringFormat="/ {0}">
+                                    <Binding Path="QuizQuestions.Count"/>
+                                </MultiBinding>
+                            </Label.Text>
+                        </Label>
+                    </HorizontalStackLayout>
+                </Frame>
+
+                <!-- Question actuelle -->
+                <Frame Padding="20"
+                       CornerRadius="15"
+                       HasShadow="True"
+                       BackgroundColor="{StaticResource CardBackground}"
+                       IsVisible="{Binding CurrentQuestion}">
+                    <VerticalStackLayout Spacing="15">
+                        <Label FontSize="14"
+                               Opacity="0.6">
+                            <Label.Text>
+                                <MultiBinding StringFormat="Question {0} / {1}">
+                                    <Binding Path="CurrentQuestionIndex" Converter="{StaticResource AddOneConverter}"/>
+                                    <Binding Path="QuizQuestions.Count"/>
+                                </MultiBinding>
+                            </Label.Text>
+                        </Label>
+
+                        <Label Text="{Binding CurrentQuestion.Question}"
+                               FontSize="18"
+                               FontAttributes="Bold"/>
+
+                        <CollectionView ItemsSource="{Binding CurrentQuestion.Options}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Button Text="{Binding .}"
+                                            BackgroundColor="{StaticResource Secondary}"
+                                            TextColor="White"
+                                            CornerRadius="10"
+                                            Padding="15"
+                                            Margin="0,5"
+                                            Clicked="OnAnswerClicked"/>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Résultat final -->
+                <Frame Padding="20"
+                       CornerRadius="15"
+                       HasShadow="True"
+                       BackgroundColor="{StaticResource Success}"
+                       x:Name="QuizResultFrame"
+                       IsVisible="False">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="🎉 Quiz Terminé !"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               HorizontalOptions="Center"/>
+
+                        <Label x:Name="ResultLabel"
+                               FontSize="18"
+                               TextColor="White"
+                               HorizontalOptions="Center"/>
+
+                        <Button Text="🔄 Recommencer"
+                                BackgroundColor="White"
+                                TextColor="{StaticResource Primary}"
+                                CornerRadius="10"
+                                Padding="15"
+                                Clicked="OnRestartQuizClicked"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>
