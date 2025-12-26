@@ -17,7 +17,7 @@ namespace wifiCrack.Platforms.Android
 
         public WifiService()
         {
-            _context = Platform.CurrentActivity ?? Android.App.Application.Context;
+            _context = Platform.AppContext;
             _wifiManager = (WifiManager)_context.GetSystemService(Context.WifiService);
         }
 
@@ -219,12 +219,12 @@ namespace wifiCrack.Platforms.Android
 
         public WifiReceiver()
         {
-            _wifiManager = (WifiManager)Android.App.Application.Context.GetSystemService(Context.WifiService);
+            _wifiManager = (WifiManager)Platform.AppContext.GetSystemService(Context.WifiService);
         }
 
         public async Task<List<WifiNetworkDto>> ScanNetworksAsync()
         {
-            var context = Android.App.Application.Context;
+            var context = Platform.AppContext;
             try
             {
                 _scanCompletion = new TaskCompletionSource<bool>();
