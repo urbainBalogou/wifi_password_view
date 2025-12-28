@@ -7,12 +7,7 @@
     Shell.FlyoutBehavior="Disabled">
 
     <ShellContent
-        Title="Disclaimer"
-        ContentTemplate="{DataTemplate views:DisclaimerPage}"
-        Route="DisclaimerPage" />
-
-    <ShellContent
-        Title="Home"
+        Title="WiFi Security Auditor"
         ContentTemplate="{DataTemplate views:MainPage}"
         Route="MainPage" />
 

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:wifiCrack.ViewModels"
+             xmlns:models="clr-namespace:wifiCrack.Models"
+             x:Class="wifiCrack.Views.SavedNetworksPage"
+             x:DataType="viewmodels:SavedNetworksViewModel"
+             Title="Réseaux Sauvegardés">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="CardBackground">#FFFFFF</Color>
+            <Color x:Key="PrimaryColor">#2196F3</Color>
+            <Color x:Key="SuccessColor">#4CAF50</Color>
+            <Color x:Key="WarningColor">#FF9800</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*" Padding="16">
+
+        <!-- Header avec statistiques -->
+        <Frame Grid.Row="0"
+               BackgroundColor="{StaticResource PrimaryColor}"
+               CornerRadius="12"
+               Padding="16"
+               Margin="0,0,0,16">
+            <VerticalStackLayout>
+                <Label Text="MODE DÉMONSTRATION ÉDUCATIVE"
+                       TextColor="White"
+                       FontSize="12"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       Margin="0,0,0,8"/>
+
+                <Label TextColor="White"
+                       FontSize="14"
+                       HorizontalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="⚠️ Les mots de passe affichés sont FICTIFS" FontAttributes="Bold"/>
+                            <Span Text="&#x0a;Pour fins éducatives uniquement"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <Label HorizontalOptions="Center"
+                       TextColor="White"
+                       FontSize="18"
+                       Margin="0,12,0,0">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="📱 "/>
+                            <Span Text="{Binding SavedNetworks.Count}"/>
+                            <Span Text=" réseaux sauvegardés"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Liste des réseaux sauvegardés -->
+        <RefreshView Grid.Row="1"
+                     IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding RefreshCommand}">
+            <CollectionView ItemsSource="{Binding SavedNetworks}"
+                           EmptyView="Aucun réseau sauvegardé trouvé">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:SavedWifiCredential">
+                        <Frame BackgroundColor="{StaticResource CardBackground}"
+                               CornerRadius="12"
+                               Padding="16"
+                               Margin="0,0,0,12"
+                               HasShadow="True">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:SavedNetworksViewModel}}, Path=CopyPasswordCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+
+                                <!-- SSID avec badge statut -->
+                                <HorizontalStackLayout Grid.Row="0" Grid.ColumnSpan="2" Spacing="8">
+                                    <Label Text="📶" FontSize="20"/>
+                                    <Label Text="{Binding Ssid}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Center"/>
+                                    <Frame BackgroundColor="{StaticResource SuccessColor}"
+                                           Padding="8,4"
+                                           CornerRadius="12"
+                                           IsVisible="{Binding IsCurrentNetwork}"
+                                           VerticalOptions="Center">
+                                        <Label Text="Connecté"
+                                               TextColor="White"
+                                               FontSize="10"
+                                               FontAttributes="Bold"/>
+                                    </Frame>
+                                </HorizontalStackLayout>
+
+                                <!-- Type de sécurité -->
+                                <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Margin="0,8,0,0" Spacing="8">
+                                    <Label Text="🔒" FontSize="14"/>
+                                    <Label Text="{Binding SecurityType}"
+                                           FontSize="14"
+                                           TextColor="#666666"/>
+                                </HorizontalStackLayout>
+
+                                <!-- Mot de passe avec bouton copier -->
+                                <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Margin="0,8,0,0" Spacing="8">
+                                    <Label Text="🔑" FontSize="14"/>
+                                    <Label Text="Mot de passe:"
+                                           FontSize="14"
+                                           TextColor="#666666"
+                                           VerticalOptions="Center"/>
+                                    <Label Text="{Binding Password}"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource PrimaryColor}"
+                                           VerticalOptions="Center"/>
+                                    <Label Text="📋"
+                                           FontSize="16"
+                                           VerticalOptions="Center">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:SavedNetworksViewModel}}, Path=CopyPasswordCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </HorizontalStackLayout>
+
+                                <!-- Date de sauvegarde -->
+                                <HorizontalStackLayout Grid.Row="3" Grid.ColumnSpan="2" Margin="0,8,0,0" Spacing="8">
+                                    <Label Text="📅" FontSize="14"/>
+                                    <Label FontSize="12" TextColor="#999999">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Sauvegardé le "/>
+                                                <Span Text="{Binding SavedDate, StringFormat='{0:dd/MM/yyyy}'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </HorizontalStackLayout>
+
+                                <!-- Network ID -->
+                                <Label Grid.Row="4" Grid.ColumnSpan="2"
+                                       Margin="0,4,0,0"
+                                       FontSize="10"
+                                       TextColor="#CCCCCC">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="ID: "/>
+                                            <Span Text="{Binding NetworkId}"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Loading indicator -->
+        <ActivityIndicator Grid.Row="1"
+                          IsRunning="{Binding IsLoading}"
+                          IsVisible="{Binding IsLoading}"
+                          Color="{StaticResource PrimaryColor}"
+                          VerticalOptions="Center"
+                          HorizontalOptions="Center"/>
+    </Grid>
+</ContentPage>

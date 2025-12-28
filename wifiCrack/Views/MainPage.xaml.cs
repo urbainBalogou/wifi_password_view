@@ -52,6 +52,11 @@ namespace wifiCrack.Views
             }
         }
 
+        private async void OnSavedNetworksClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new SavedNetworksPage());
+        }
+
         private async void OnEducationalClicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new EducationalPage());

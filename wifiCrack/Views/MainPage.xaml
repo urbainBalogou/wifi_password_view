@@ -240,19 +240,25 @@
                CornerRadius="0"
                Padding="10"
                HasShadow="True">
-            <Grid ColumnDefinitions="*,*,*">
+            <Grid ColumnDefinitions="*,*,*,*">
                 <Button Grid.Column="0"
                         Text="🏠"
                         FontSize="24"
                         BackgroundColor="Transparent"/>
 
                 <Button Grid.Column="1"
+                        Text="🔑"
+                        FontSize="24"
+                        BackgroundColor="Transparent"
+                        Clicked="OnSavedNetworksClicked"/>
+
+                <Button Grid.Column="2"
                         Text="📚"
                         FontSize="24"
                         BackgroundColor="Transparent"
                         Clicked="OnEducationalClicked"/>
 
-                <Button Grid.Column="2"
+                <Button Grid.Column="3"
                         Text="⚙️"
                         FontSize="24"
                         BackgroundColor="Transparent"

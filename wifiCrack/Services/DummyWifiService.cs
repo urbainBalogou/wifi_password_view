@@ -62,16 +62,35 @@ namespace wifiCrack.Services
         {
             await Task.Delay(500);
 
+            // SIMULATION ÉDUCATIVE - Données fictives pour démonstration
             return new List<SavedWifiCredential>
             {
                 new SavedWifiCredential
                 {
                     Ssid = "Demo_WPA2_Network",
-                    Password = "Sauvegardé (non accessible sans root)",
-                    SecurityType = "WPA2",
+                    Password = "demo_password_123",  // SIMULATION UNIQUEMENT
+                    SecurityType = "WPA2-PSK",
                     SavedDate = System.DateTime.Now.AddDays(-7),
                     IsCurrentNetwork = true,
                     NetworkId = "1"
+                },
+                new SavedWifiCredential
+                {
+                    Ssid = "HomeNetwork_5G",
+                    Password = "MySecurePass2024!",  // SIMULATION UNIQUEMENT
+                    SecurityType = "WPA2-PSK",
+                    SavedDate = System.DateTime.Now.AddDays(-30),
+                    IsCurrentNetwork = false,
+                    NetworkId = "2"
+                },
+                new SavedWifiCredential
+                {
+                    Ssid = "CoffeeShop_WiFi",
+                    Password = "coffee2024",  // SIMULATION UNIQUEMENT
+                    SecurityType = "WPA2-PSK",
+                    SavedDate = System.DateTime.Now.AddDays(-3),
+                    IsCurrentNetwork = false,
+                    NetworkId = "3"
                 }
             };
         }
