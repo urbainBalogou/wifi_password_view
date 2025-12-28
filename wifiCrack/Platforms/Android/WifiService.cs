@@ -76,23 +76,38 @@ namespace wifiCrack.Platforms.Android
 
             try
             {
-                // MODE DÉMONSTRATION ÉDUCATIVE
-                // Note: Sur Android 10+, l'accès réel aux mots de passe est impossible sans root
-                // Cette simulation montre le concept pour fins éducatives
+                // TENTATIVE 1: Accès ROOT pour lire les VRAIS mots de passe
+                var rootReader = new RootWifiPasswordReader();
+                if (await rootReader.CheckRootAccessAsync())
+                {
+                    System.Diagnostics.Debug.WriteLine("[WifiService] ✅ Accès ROOT détecté - Lecture des vrais mots de passe");
+                    var realPasswords = await rootReader.ReadRealPasswordsAsync();
 
+                    if (realPasswords.Count > 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[WifiService] ✅ {realPasswords.Count} mots de passe RÉELS trouvés");
+                        return realPasswords;
+                    }
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("[WifiService] ⚠️ Pas d'accès ROOT - Mode simulation activé");
+                }
+
+                // TENTATIVE 2: Utiliser WifiManager (sans mots de passe réels sur Android 10+)
                 var configuredNetworks = _wifiManager.ConfiguredNetworks;
 
                 if (configuredNetworks != null && configuredNetworks.Count > 0)
                 {
+                    System.Diagnostics.Debug.WriteLine($"[WifiService] {configuredNetworks.Count} réseaux trouvés via WifiManager");
                     foreach (var config in configuredNetworks)
                     {
                         var ssid = config.Ssid?.Replace("\"", "");
                         savedNetworks.Add(new SavedWifiCredential
                         {
                             Ssid = ssid,
-                            // SIMULATION ÉDUCATIVE : Mot de passe fictif pour démonstration
-                            // En réalité, Android 10+ ne permet PAS l'accès aux vrais mots de passe
-                            Password = GenerateSimulatedPassword(ssid),
+                            // MODE SIMULATION: Mot de passe fictif car pas de root
+                            Password = $"🔒 [Simulé] {GenerateSimulatedPassword(ssid)}",
                             SecurityType = GetSecurityTypeFromConfig(config),
                             SavedDate = DateTime.Now.AddDays(-new Random().Next(1, 90)),
                             NetworkId = config.NetworkId.ToString(),
@@ -102,6 +117,7 @@ namespace wifiCrack.Platforms.Android
                 }
                 else
                 {
+                    System.Diagnostics.Debug.WriteLine("[WifiService] Aucun réseau trouvé - Affichage exemples éducatifs");
                     // Si aucun réseau réel, afficher des exemples éducatifs
                     savedNetworks.AddRange(GetEducationalSimulationNetworks());
                 }
@@ -110,7 +126,7 @@ namespace wifiCrack.Platforms.Android
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[WifiService] Error getting saved networks: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[WifiService] ❌ Erreur: {ex.Message}");
                 // En cas d'erreur, afficher quand même des données de simulation
                 savedNetworks.AddRange(GetEducationalSimulationNetworks());
             }

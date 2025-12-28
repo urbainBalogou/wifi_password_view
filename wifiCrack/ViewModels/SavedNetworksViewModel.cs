@@ -38,7 +38,11 @@ namespace wifiCrack.ViewModels
 
             LoadNetworksCommand = new RelayCommand(async () => await LoadNetworksAsync());
             RefreshCommand = new RelayCommand(async () => await RefreshNetworksAsync());
-            CopyPasswordCommand = new RelayCommand<SavedWifiCredential>(CopyPassword);
+            CopyPasswordCommand = new RelayCommand(parameter =>
+            {
+                if (parameter is SavedWifiCredential network)
+                    CopyPassword(network);
+            });
         }
 
         public async Task LoadNetworksAsync()
