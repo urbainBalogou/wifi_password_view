@@ -12,17 +12,26 @@ namespace wifiCrack.Platforms.Android
 {
     public class WifiService : IWifiService
     {
-        private readonly WifiManager _wifiManager;
-        private readonly Context _context;
+        private WifiManager _wifiManager;
+        private Context _context;
 
         public WifiService()
         {
-            _context = Platform.AppContext;
-            _wifiManager = (WifiManager)_context.GetSystemService(Context.WifiService);
+            // Ne pas initialiser ici - attendre la première utilisation
+        }
+
+        private void EnsureInitialized()
+        {
+            if (_context == null)
+            {
+                _context = Platform.AppContext;
+                _wifiManager = (WifiManager)_context.GetSystemService(Context.WifiService);
+            }
         }
 
         public async Task<List<WifiNetwork>> ScanNetworksAsync()
         {
+            EnsureInitialized();
             var networks = new List<WifiNetwork>();
 
             try
@@ -62,6 +71,7 @@ namespace wifiCrack.Platforms.Android
 
         public async Task<List<SavedWifiCredential>> GetSavedNetworksAsync()
         {
+            EnsureInitialized();
             var savedNetworks = new List<SavedWifiCredential>();
 
             try
@@ -154,6 +164,7 @@ namespace wifiCrack.Platforms.Android
 
         public bool IsWifiEnabled()
         {
+            EnsureInitialized();
             return _wifiManager?.IsWifiEnabled ?? false;
         }
 
@@ -168,6 +179,7 @@ namespace wifiCrack.Platforms.Android
 
         private async Task<bool> IsNetworkSaved(string ssid)
         {
+            EnsureInitialized();
             try
             {
                 var configuredNetworks = _wifiManager.ConfiguredNetworks;

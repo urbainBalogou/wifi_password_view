@@ -13,11 +13,11 @@ namespace wifiCrack.Views
         {
             InitializeComponent();
 
-            // Initialiser le ViewModel
+            // Créer manuellement les services (avec lazy initialization dans WifiService)
 #if ANDROID
             var wifiService = new Platforms.Android.WifiService();
 #else
-            var wifiService = new Services.DummyWifiService(); // Pour les autres plateformes
+            var wifiService = new DummyWifiService();
 #endif
             var securityService = new SecurityAnalysisService();
 
