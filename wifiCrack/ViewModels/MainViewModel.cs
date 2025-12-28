@@ -26,7 +26,7 @@ namespace wifiCrack.ViewModels
             _securityService = securityService;
 
             Networks = new ObservableCollection<WifiNetwork>();
-
+            StatusMessage = "Prêt à scanner";
             ScanCommand = new RelayCommand(async () => await ScanNetworksAsync(), () => !IsScanning);
             RefreshCommand = new RelayCommand(async () => await ScanNetworksAsync(), () => !IsScanning);
         }

@@ -1,0 +1,1 @@
+C:\Users\User\source\repos\wifi_password_view\wifiCrack\wifiCrack.csproj;x64

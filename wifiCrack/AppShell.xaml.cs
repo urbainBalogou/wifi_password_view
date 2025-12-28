@@ -7,22 +7,22 @@ public partial class AppShell : Shell
         InitializeComponent();
 
         // Vérifier si le disclaimer a été accepté
-        Loaded += OnShellLoaded;
+       // Loaded += OnShellLoaded;
     }
 
     private async void OnShellLoaded(object sender, EventArgs e)
     {
-        var disclaimerAccepted = Preferences.Get("DisclaimerAccepted", false);
+   //     var disclaimerAccepted = Preferences.Get("DisclaimerAccepted", false);
 
-        if (disclaimerAccepted)
+       /* if (disclaimerAccepted)
         {
             // Aller directement à la page principale
-            await Shell.Current.GoToAsync("//MainPage");
+            await Shell.Current.GoToAsync("");
         }
-        else
-        {
+        else*/
+        
             // Afficher le disclaimer
-            await Shell.Current.GoToAsync("//DisclaimerPage");
-        }
+            await Shell.Current.GoToAsync("//MainPage");
+        
     }
 }
